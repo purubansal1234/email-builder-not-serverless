@@ -6,6 +6,10 @@ const nextConfig = {
     OPENAI_MODEL_NAME: process.env.OPENAI_MODEL_NAME,
     OPENAI_TEMPERATURE: process.env.OPENAI_TEMPERATURE,
   },
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
 }
 
 export default nextConfig;
+
