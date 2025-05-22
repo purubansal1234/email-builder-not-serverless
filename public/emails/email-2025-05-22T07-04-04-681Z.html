@@ -1,0 +1,111 @@
+Here is an HTML email template for selling your product, featuring a 'Buy Now' button in black:
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Product Promotion</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+        }
+
+        .header {
+            background-color: #333333;
+            color: #ffffff;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .content {
+            padding: 20px;
+            text-align: left;
+        }
+
+        .product-image {
+            width: 100%;
+            height: auto;
+        }
+
+        .product-description {
+            margin: 20px 0;
+        }
+
+        .buy-now {
+            display: inline-block;
+            background-color: #000000;
+            color: #ffffff;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .footer {
+            background-color: #333333;
+            color: #ffffff;
+            text-align: center;
+            padding: 10px;
+            font-size: 12px;
+        }
+
+        @media only screen and (max-width: 600px) {
+            .content {
+                padding: 10px;
+            }
+
+            .buy-now {
+                padding: 15px 25px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <table class="container">
+        <tr>
+            <td class="header">
+                <h1>Special Offer Just for You!</h1>
+            </td>
+        </tr>
+        <tr>
+            <td class="content">
+                <img src="<!-- PRODUCT_IMAGE_URL -->" alt="Product Image" class="product-image">
+                <h2><!-- PRODUCT_NAME --></h2>
+                <p class="product-description"><!-- PRODUCT_DESCRIPTION --></p>
+                <p><strong>Price: <!-- PRODUCT_PRICE --></strong></p>
+                <a href="<!-- BUY_NOW_LINK -->" class="buy-now">Buy Now</a>
+            </td>
+        </tr>
+        <tr>
+            <td class="footer">
+                <p>&copy; 2023 Your Company. All rights reserved.</p>
+                <p><a href="<!-- UNSUBSCRIBE_LINK -->" style="color: #ffffff; text-decoration: underline;">Unsubscribe</a></p>
+            </td>
+        </tr>
+    </table>
+</body>
+
+</html>
+```
+
+Replace the placeholders (`<!-- PRODUCT_IMAGE_URL -->`, `<!-- PRODUCT_NAME -->`, `<!-- PRODUCT_DESCRIPTION -->`, `<!-- PRODUCT_PRICE -->`, `<!-- BUY_NOW_LINK -->`, and `<!-- UNSUBSCRIBE_LINK -->`) with your actual product details and links.
