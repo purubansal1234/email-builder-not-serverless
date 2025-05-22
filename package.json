@@ -2,6 +2,7 @@
   "name": "email-builder",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -13,14 +14,16 @@
     "@heroicons/react": "^2.2.0",
     "@langchain/core": "^0.3.57",
     "@langchain/openai": "^0.5.10",
-    "dotenv": "^16.5.0",
+    "dotenv": "^16.3.1",
     "langchain": "^0.3.27",
     "next": "15.3.2",
     "node-fetch": "^2.7.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-markdown": "^10.1.0",
-    "react-syntax-highlighter": "^15.6.1"
+    "react-syntax-highlighter": "^15.6.1",
+    "express": "^4.18.2",
+    "cors": "^2.8.5"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
