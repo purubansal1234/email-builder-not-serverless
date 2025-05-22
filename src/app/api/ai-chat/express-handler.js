@@ -2,7 +2,7 @@ import { ChatOpenAI } from "@langchain/openai";
 import fs from 'fs/promises';
 import path from 'path';
 import fetch from 'node-fetch';
-const cors = require('cors');
+import cors from 'cors';
 
 // Read the base template (sync at startup)
 let baseTemplate = '';
