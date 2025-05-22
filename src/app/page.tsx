@@ -18,7 +18,6 @@ export default function Home() {
   const [elapsed, setElapsed] = useState(0);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const [responseTimes, setResponseTimes] = useState<number[]>([]); // Array of seconds for each assistant message
-  const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
   // Timer effect
@@ -49,10 +48,9 @@ export default function Home() {
    * Handles sending a message to the backend and updating state.
    * @param {string} input
    */
-  const handleSend = async () => {
+  const handleSend = async (input: string) => {
     if (!input.trim()) return;
     setMessages(prev => [...prev, { role: 'user', content: input }]);
-    setInput('');
     setIsLoading(true);
     try {
       const response = await fetch('https://email-builder-not-serverless.onrender.com/api/ai-chat', {
