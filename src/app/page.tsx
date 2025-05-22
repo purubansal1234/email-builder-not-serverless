@@ -18,6 +18,8 @@ export default function Home() {
   const [elapsed, setElapsed] = useState(0);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const [responseTimes, setResponseTimes] = useState<number[]>([]); // Array of seconds for each assistant message
+  const [input, setInput] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   // Timer effect
   React.useEffect(() => {
@@ -47,73 +49,37 @@ export default function Home() {
    * Handles sending a message to the backend and updating state.
    * @param {string} input
    */
-  const handleSend = async (input: string) => {
-    setMessages(prev => ([...prev, { role: 'user', content: input }]));
-    // Initial creation flow
-    if (!emailHtml) {
-      // Planning Agent
-      const { result: planningData } = await addAgentStep('Planning Agent is analyzing your request...', async () => {
-        const res = await fetch('/api/ai-chat', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ messages: [...messages, { role: 'user', content: input }] })
-        });
-        if (!res.ok) {
-          let errorMsg = 'Unknown error';
-          try {
-            const errJson = await res.json();
-            errorMsg = errJson.error || JSON.stringify(errJson);
-          } catch {
-            errorMsg = await res.text();
-          }
-          throw new Error(`Planning failed: ${errorMsg}`);
-        }
-        return await res.json();
-      });
-      // If clarifying questions, show and return
-      if (planningData.stage === 'planning') {
-        setMessages(prev => ([...prev, { role: 'assistant', content: planningData.aiMessage }]));
-        setWaiting(false);
-        return;
-      }
-      // Creation Agent
-      const { result: creationData } = await addAgentStep('Creation Agent is building your email...', async () => planningData);
-      // Evaluator Agent
-      const { result: evalData } = await addAgentStep('Evaluator Agent is checking the output...', async () => creationData);
-      // Show final output
-      setMessages(prev => ([...prev, { role: 'assistant', content: evalData.aiMessage || 'Sorry, something went wrong.' }]));
-      if (evalData.htmlContent) setEmailHtml(evalData.htmlContent);
-      setStage(evalData.stage || '');
-      setPlan('');
-      setWaiting(false);
-      return;
-    }
-    // Edit flow
-    const { result: editData } = await addAgentStep('Edit Agent is updating your template...', async () => {
-      const res = await fetch('/api/ai-chat', {
+  const handleSend = async () => {
+    if (!input.trim()) return;
+    setMessages(prev => [...prev, { role: 'user', content: input }]);
+    setInput('');
+    setIsLoading(true);
+    try {
+      const response = await fetch('https://email-builder-not-serverless.onrender.com/api/ai-chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ messages: [...messages, { role: 'user', content: input }], emailHtml })
+        body: JSON.stringify({ messages: [...messages, { role: 'user', content: input }], emailHtml, plan }),
       });
-      if (!res.ok) {
-        let errorMsg = 'Unknown error';
-        try {
-          const errJson = await res.json();
-          errorMsg = errJson.error || JSON.stringify(errJson);
-        } catch {
-          errorMsg = await res.text();
-        }
-        throw new Error(`Edit failed: ${errorMsg}`);
+      let data;
+      let isJson = false;
+      try {
+        data = await response.json();
+        isJson = true;
+      } catch {
+        data = await response.text();
       }
-      return await res.json();
-    });
-    const { result: evalData } = await addAgentStep('Evaluator Agent is checking the output...', async () => editData);
-    // Show final output
-    setMessages(prev => ([...prev, { role: 'assistant', content: evalData.aiMessage || 'Sorry, something went wrong.' }]));
-    if (evalData.htmlContent) setEmailHtml(evalData.htmlContent);
-    setStage(evalData.stage || '');
-    setPlan('');
-    setWaiting(false);
+      if (!response.ok) {
+        const errorMsg = isJson && data.error ? data.error : (typeof data === 'string' ? data : 'Unknown error');
+        setMessages(prev => [...prev, { role: 'assistant', content: `Error: ${errorMsg}` }]);
+      } else {
+        setMessages(prev => [...prev, { role: 'assistant', content: isJson && data.aiMessage ? data.aiMessage : (typeof data === 'string' ? data : 'No response from server') }]);
+      }
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? err.message : 'An unknown error occurred';
+      setMessages(prev => [...prev, { role: 'assistant', content: `Error: ${errorMessage}` }]);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
