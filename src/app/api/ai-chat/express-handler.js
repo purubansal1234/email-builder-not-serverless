@@ -2,6 +2,7 @@ import { ChatOpenAI } from "@langchain/openai";
 import fs from 'fs/promises';
 import path from 'path';
 import fetch from 'node-fetch';
+const cors = require('cors');
 
 // Read the base template (sync at startup)
 let baseTemplate = '';
@@ -113,4 +114,12 @@ export async function handleAiChat(req, res) {
     await logAgentStep({ messages: [], plan: undefined, emailHtml: undefined, aiMessage: null, htmlContent: null, step: 'error' });
     res.status(500).json({ error: 'Failed to process your request', details: err.message, type: err.name });
   }
-} 
+}
+
+const app = require('express')();
+
+// Allow requests from your Vercel frontend domain
+app.use(cors({
+  origin: 'https://email-builder-not-serverless.vercel.app', // <-- your Vercel frontend URL
+  credentials: true
+})); 
